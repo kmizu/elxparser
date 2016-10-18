@@ -1,8 +1,10 @@
 defmodule ElxParserTest do
   use ExUnit.Case
+  import ElxParser
   doctest ElxParser
 
-  test "the truth" do
-    assert 1 + 1 == 2
+  test "parser" do
+    hello = s("Hello, ")
+    assert {:success, "Hello, ", "World"} == hello.("Hello, World")
   end
 end
