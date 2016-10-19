@@ -1,5 +1,5 @@
 defmodule ElxParser do
-  def s(prefix) do
+  def string(prefix) do
     fn input ->
       if String.starts_with?(input, prefix) do
         input_len = String.length(input)
@@ -9,6 +9,10 @@ defmodule ElxParser do
         {:failure, input}
       end
     end
+  end
+
+  def s(prefix) do
+    string(prefix)
   end
 
   def alt(x, y) do
