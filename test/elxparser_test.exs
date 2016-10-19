@@ -13,18 +13,16 @@ defmodule ElxParserTest do
     rule(fn ->
       chainl(
         m,
-        alt(
-          map(s("+"), fn _ -> 
-            fn lhs, rhs ->
-              lhs + rhs
-            end
-          end),
-          map(s("-"), fn _ -> 
-            fn lhs, rhs ->
-              lhs - rhs
-            end
-          end)
-        )
+        map(s("+"), fn _ -> 
+          fn lhs, rhs ->
+            lhs + rhs
+          end
+        end) <|>
+        map(s("-"), fn _ -> 
+          fn lhs, rhs ->
+            lhs - rhs
+          end
+        end)
       )
     end)
   end
@@ -33,31 +31,27 @@ defmodule ElxParserTest do
     rule(fn ->
       chainl(
         p,
-        alt(
-          map(s("*"), fn _ -> 
-            fn lhs, rhs ->
-              lhs * rhs
-            end
-          end),
-          map(s("/"), fn _ -> 
-            fn lhs, rhs ->
-              lhs * rhs
-            end
-          end)
-        )
+        map(s("*"), fn _ -> 
+          fn lhs, rhs ->
+            lhs * rhs
+          end
+        end) <|>
+        map(s("/"), fn _ -> 
+          fn lhs, rhs ->
+            lhs * rhs
+          end
+        end)
       )
     end)
   end
 
   def p do
     rule(fn ->
-      alt(
-        map(seq(seq(s("("), e), s(")")), fn result ->
-          {{"(", v}, ")"} = result
-          v
-        end),
-        n
-      )
+      map(s("(") ~>> e ~>> s(")"), fn result ->
+        {{"(", v}, ")"} = result
+        v
+      end) <|>
+      n
     end)
   end
 

@@ -21,6 +21,10 @@ defmodule ElxParser do
     end
   end
 
+  def x <|> y do
+    alt(x, y)
+  end
+
   def seq(x, y) do
     fn input ->
       case x.(input) do
@@ -32,6 +36,10 @@ defmodule ElxParser do
         otherwise -> otherwise
       end
     end
+  end
+
+  def x ~>> y do
+    seq(x, y)
   end
 
   def loop(parser, rest, results) do
