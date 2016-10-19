@@ -13,12 +13,12 @@ defmodule ElxParserTest do
     rule(fn ->
       chainl(
         m,
-        map(s("+"), fn _ -> 
+        map(string("+"), fn _ -> 
           fn lhs, rhs ->
             lhs + rhs
           end
         end) <|>
-        map(s("-"), fn _ -> 
+        map(string("-"), fn _ -> 
           fn lhs, rhs ->
             lhs - rhs
           end
@@ -31,12 +31,12 @@ defmodule ElxParserTest do
     rule(fn ->
       chainl(
         p,
-        map(s("*"), fn _ -> 
+        map(string("*"), fn _ -> 
           fn lhs, rhs ->
             lhs * rhs
           end
         end) <|>
-        map(s("/"), fn _ -> 
+        map(string("/"), fn _ -> 
           fn lhs, rhs ->
             lhs * rhs
           end
@@ -47,7 +47,7 @@ defmodule ElxParserTest do
 
   def p do
     rule(fn ->
-      map(s("(") ~>> e ~>> s(")"), fn result ->
+      map(string("(") ~>> e ~>> string(")"), fn result ->
         {{"(", v}, ")"} = result
         v
       end) <|>
@@ -62,7 +62,31 @@ defmodule ElxParserTest do
     end)
   end
 
-  test "parser" do
+  test "for input '1'" do
+    assert {:success, 1, ""} == e.("1")
+  end
+  test "for input '1+1'" do
+    assert {:success, 2, ""} == e.("1+1")
+  end
+  test "for input '1*1'" do
+    assert {:success, 1, ""} == e.("1*1")
+  end
+  test "for input '1/1'" do
+    assert {:success, 1, ""} == e.("1/1")
+  end
+  test "for input '2+1'" do
+    assert {:success, 3, ""} == e.("2+1")
+  end
+  test "for input '2-1'" do
+    assert {:success, 1, ""} == e.("2-1")
+  end
+  test "for input '2*1'" do
+    assert {:success, 2, ""} == e.("2*1")
+  end
+  test "for input '2/1'" do
+    assert {:success, 2, ""} == e.("2/1")
+  end
+  test "for input '(1+2)*(3+4)'" do
     assert {:success, 21, ""} == e.("(1+2)*(3+4)")
   end
 end
