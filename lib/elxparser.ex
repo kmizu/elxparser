@@ -37,14 +37,20 @@ defmodule ElxParser do
   def loop(parser, rest, results) do
     case parser.(rest) do
       {:success, v, next} -> loop(parser, next, [v|results]) 
-      {:failure, next} -> {:success, results, next}
+      {:failure, next} -> {:success, Enum.reverse(results), next}
     end
   end
 
   def rep(x) do
     fn input ->
       {:success, values, next} = loop(x, input, [])
-      {:success, List.reverse(values), next}
+      {:success, values, next}
+    end
+  end
+
+  def rule(block) do
+    fn input ->
+      (block.()).(input)
     end
   end
 
@@ -66,17 +72,31 @@ defmodule ElxParser do
     end
   end
 
+  def regex(literal) do
+    fn input ->
+      case Regex.run(literal, input, return: :index) do
+        nil -> {:failure, input}
+        [{first, last}] -> 
+          if first != 0 do
+            {:failure, input}
+          else
+            {:success, String.slice(input, 0..(last - 1)), String.slice(input, last..(String.length(input) - 1))}
+          end
+      end
+    end
+  end
+
   def chainl(p, q) do
     map(
       seq(p, rep(seq(q, p))), 
       fn values ->
-        [x|xs] = values
+        {x, xs}= values
         List.foldl(
           xs,
           x,
-          fn (r, e) ->
-            {f, a} = e
-            f.(r, a)
+          fn (r, a) ->
+            {f, e} = r
+            f.(a, e)
           end
         )
       end
