@@ -1,7 +1,6 @@
 defmodule ElxParserTest do
   use ExUnit.Case
   import ElxParser
-  doctest ElxParser
 
   def e do
     rule(fn ->
