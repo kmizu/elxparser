@@ -24,7 +24,7 @@ defmodule ElxParser.Mixfile do
   defp package do
       [# These are the default files included in the package
         name: :elxparser,
-        files: ["lib", "test", "mix.exs", "config.exs", "README*", "LICENSE*"],
+        files: ["lib", "test", "mix.exs", "README*", "LICENSE*"],
         maintainers: ["Kota Mizushima"],
         licenses: ["MIT"],
         links: %{"GitHub" => "https://github.com/kmizu/elxparser"}]
