@@ -4,9 +4,8 @@ defmodule ElxParser.Mixfile do
   def project do
     [app: :elxparser,
      version: "0.0.1",
-     elixir: "~> 1.1",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
+     elixir: "~> 1.0",
+     description: "An Elixir Parser Combinator Library",
      package: package,
      deps: deps]
   end
@@ -27,7 +26,7 @@ defmodule ElxParser.Mixfile do
         name: :elxparser,
         files: ["lib", "test", "mix.exs", "config.exs", "README*", "LICENSE*"],
         maintainers: ["Kota Mizushima"],
-        licenses: ["MIT License"],
+        licenses: ["MIT"],
         links: %{"GitHub" => "https://github.com/kmizu/elxparser"}]
   end
 end
